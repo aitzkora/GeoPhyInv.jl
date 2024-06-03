@@ -30,7 +30,6 @@ end
 # the edges of 
 function update!(pa::PFdtd, m::AbstractVector, mparams)
 
-    CUDA.allowscalar(true)
     mchunks = chunk(m, length(mparams))
     # dimensionalize
     broadcast(enumerate(mparams)) do (i, mname)
@@ -44,7 +43,6 @@ function update!(pa::PFdtd, m::AbstractVector, mparams)
         @. mod = exp(mod) * r
         # @. mod = mod * r + r
     end
-    CUDA.allowscalar(false)
 
     # update dependencies
     update_dmod!(pa.c)
@@ -53,7 +51,6 @@ end
 
 # update m using pa.c.mod
 function update!(m::AbstractVector, pa::PFdtd, mparams)
-    CUDA.allowscalar(true)
     broadcast(mparams) do mname
         mod = pa.c.mod[mname]
         r = pa.c.ref_mod[mname]
@@ -72,7 +69,6 @@ function update!(m::AbstractVector, pa::PFdtd, mparams)
         @. mod = exp(mod) * r
         # @. mod = mod * r + r
     end
-    CUDA.allowscalar(false)
 end
 
 # the following medium parameters are stored on XPU

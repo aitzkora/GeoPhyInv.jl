@@ -21,9 +21,8 @@ begin
     Pkg.add("PlutoUI")
     Pkg.add("PlutoTest")
     Pkg.add("Plots")
-	 Pkg.add("CUDA")
     using PlutoLinks: @revise
-    using PlutoUI, PlutoTest, Plots, CUDA
+    using PlutoUI, PlutoTest, Plots
 end
 
 # ╔═╡ e2e1d696-ad9d-4e87-9e9a-11a3f68d05de
@@ -59,13 +58,7 @@ end
 # ╔═╡ a34fc72e-8f98-4263-b48e-6498fa69f211
 begin
     reload_geophyinv
-	if CUDA.functional()
-			GeoPhyInv.@init_parallel_stencil(2, true, Float32, 2)
-else
 	GeoPhyInv.@init_parallel_stencil(2, false, Float32, 2)
-
-end
-   
 	using Statistics
 end
 

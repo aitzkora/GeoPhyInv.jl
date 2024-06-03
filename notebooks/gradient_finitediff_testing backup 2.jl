@@ -21,9 +21,8 @@ begin
     Pkg.add("PlutoUI")
     Pkg.add("PlutoTest")
     Pkg.add("Plots")
-    Pkg.add("CUDA")
     using PlutoLinks: @revise
-    using PlutoUI, PlutoTest, Plots, CUDA
+    using PlutoUI, PlutoTest, Plots
 end
 
 # ╔═╡ 893cd92d-3d0d-4fb2-b465-f61a237fc154

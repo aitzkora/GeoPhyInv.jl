@@ -1,7 +1,7 @@
 
 include("types.jl")
 include("attenuation.jl")
-
+using Infiltrator
 
 """
 ```julia
@@ -237,8 +237,7 @@ function PFdtd(
 
     # a distributed array of P_x_worker --- note that the parameters for each super source are efficiently distributed here
     papa = ddata(
-        T=_fd_use_gpu ?
-          Vector{P_x_worker_x_pw{N,CUDA.CuArray{_fd_datatype,N,CUDA.Mem.DeviceBuffer}}} : Vector{P_x_worker_x_pw{N,Array{_fd_datatype,N}}},
+        T= Vector{P_x_worker_x_pw{N,Array{_fd_datatype,N}}},
         init=I -> Vector{P_x_worker_x_pw}(sschunks[I...][1], pac),
         pids=work[1:1], # disable distributed in order for Pluto to work (waiting for Pluto bug to enable distributed)
     )

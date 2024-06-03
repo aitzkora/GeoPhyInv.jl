@@ -5,7 +5,7 @@ function sum_grads!(::Val{:adjoint}, ::Val{2}, pac, pap)
         g = pap[1].ss[issp].gradients
         for name in names(g1)[1]
             for i in eachindex(g1[name])
-                CUDA.@allowscalar g1[name][i] = g1[name][i] + g[name][i]
+                g1[name][i] = g1[name][i] + g[name][i]
             end
         end
     end

@@ -27,7 +27,6 @@ function gradient!(g, m, loss, dobs::Records, pa::PFdtd, mparams=Medium(pa.c.att
     pa.c.attrib_mod.mode = :adjoint
     update!(pa)
 
-    CUDA.allowscalar(true)
     mchunks = chunk(m, length(mparams))
     gchunks = chunk(g, length(mparams))
     broadcast(enumerate(mparams)) do (i, mname)
@@ -43,7 +42,6 @@ function gradient!(g, m, loss, dobs::Records, pa::PFdtd, mparams=Medium(pa.c.att
         gi = gchunks[i]
         copyto!(gi, gm)
     end
-    CUDA.allowscalar(false)
     pa.c.attrib_mod.mode = mode_save
     return lossvalue(loss, dobs, pa.c.data[1])
 end
@@ -53,7 +51,7 @@ end
 function forward_map!(d, m, pa::PFdtd)
     # copy input m to pac.δmod
     broadcast(pa.c.δmod, chunk(m, size=length(first(pa.c.δmod)))) do m1, m2
-        CUDA.@allowscalar copyto!(m1, m2)
+        copyto!(m1, m2)
     end
 
     update!(pa, pa.c.srcwav, [1, 1], verbose=false)
@@ -70,7 +68,7 @@ function adjoint_map!(gm, d, pa::PFdtd)
 
     # copy input d to pac.srcwav (only implemented first source for now
     broadcast(pa.c.srcwav[2][1].d, chunk(d, size=length(first(pa.c.srcwav[2][1].d)))) do d1, d2
-        CUDA.@allowscalar copyto!(d1, d2)
+        copyto!(d1, d2)
     end
 
     # time reversal
